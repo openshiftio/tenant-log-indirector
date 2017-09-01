@@ -28,8 +28,8 @@ func main() {
 	r := CreateRouter(log.StandardLogger())
 
 	http.Handle("/", r)
-	if err := http.ListenAndServe("localhost:8080", nil); err != nil {
-		fmt.Println("unable to start server", "localhost", err)
+	if err := http.ListenAndServe("0.0.0.0:8080", nil); err != nil {
+		fmt.Println("unable to start server", "0.0.0.0:8080", err)
 	}
 
 }
