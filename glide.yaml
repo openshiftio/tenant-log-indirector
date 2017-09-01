@@ -1,0 +1,16 @@
+package: github.com/openshiftio/tenant-log-indirector
+license: Apache-2.0
+import:
+- package: github.com/gorilla/mux
+- package: github.com/gorilla/context
+- package: github.com/Sirupsen/logrus
+- package: github.com/satori/go.uuid
+- package: github.com/wadey/gocovmerge
+- package: github.com/jstemmer/go-junit-report
+- package: github.com/stretchr/testify
+  subpackages:
+    - assert
+- package: github.com/golang/lint
+  subpackages:
+  - golint
+- package: github.com/fzipp/gocyclo
