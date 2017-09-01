@@ -24,7 +24,18 @@ func TestJSONOutput(t *testing.T) {
 	log, status := run(t, "application/json", "{\"a\":1}")
 	assert.Equal(t, http.StatusOK, status)
 
-	assert.Contains(t, log, "\"json\":{\"a\":1}")
+	assert.Contains(t, log, "{\"a\":1,")
+	assert.Contains(t, log, "test-ns")
+	assert.Contains(t, log, "test-ot")
+	assert.Contains(t, log, "test-on")
+}
+
+func TestJSONOutputMsgFromOriginal(t *testing.T) {
+	log, status := run(t, "application/json", "{\"msg\":\"a\"}")
+	assert.Equal(t, http.StatusOK, status)
+
+	assert.Contains(t, log, "\"msg\":\"a\",")
+	assert.NotContains(t, log, "\"fields.msg\"")
 	assert.Contains(t, log, "test-ns")
 	assert.Contains(t, log, "test-ot")
 	assert.Contains(t, log, "test-on")

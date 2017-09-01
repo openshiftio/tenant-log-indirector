@@ -89,5 +89,10 @@ func LogRaw(logger *log.Logger, fields map[string]interface{}, msg string) {
 // LogJSON logs all application/json types with request body as fields in the field 'json'
 func LogJSON(logger *log.Logger, fields map[string]interface{}, json map[string]interface{}) {
 	entry := log.NewEntry(logger)
-	entry.WithFields(fields).WithField("json", json).Info("")
+	msg := ""
+	if m, ok := json["msg"].(string); ok {
+		msg = m
+		delete(json, "msg")
+	}
+	entry.WithFields(fields).WithFields(json).Info(msg)
 }
