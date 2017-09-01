@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: Template
+metadata:
+  name: openshiftio-tenant-log-indirector-service
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: osio-tenant-log
+    name: tenant-log-indirector
+  spec:
+    replicas: 1
+    selector:
+      app: tenant-log-indirector
+      deploymentconfig: tenant-log-indirector
+    strategy:
+      resources:
+        limits:
+          memory: 1Gi
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: tenant-log-indirector
+          deploymentconfig: tenant-log-indirector
+      spec:
+        containers:
+          image: registry.devshift.net/openshiftio/tenant-log-indirector:${IMAGE_TAG}
+          imagePullPolicy: Always
+          name: tenant-log-indirector
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /status
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+    triggers:
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: tenant-log-indirector
+  spec:
+    ports:
+      - protocol: TCP
+        port: 80
+        targetPort: 8080
+    selector:
+      deploymentconfig: tenant-log-indirector
+parameters:
+- name: IMAGE_TAG
+  value: latest

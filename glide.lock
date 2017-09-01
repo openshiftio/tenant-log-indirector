@@ -1,0 +1,26 @@
+hash: 3377589c33b4af14f0945435b355c3d5ef689924d105adafdaef193b1660be76
+updated: 2017-09-01T16:39:18.48183218+02:00
+imports:
+- name: github.com/fzipp/gocyclo
+  version: 6acd4345c835499920e8426c7e4e8d7a34f1bb83
+- name: github.com/golang/lint
+  version: c7bacac2b21ca01afa1dee0acf64df3ce047c28f
+  subpackages:
+  - golint
+- name: github.com/gorilla/context
+  version: 215affda49addc4c8ef7e2534915df2c8c35c6cd
+- name: github.com/gorilla/mux
+  version: 8096f47503459bcc74d1f4c487b7e6e42e5746b5
+- name: github.com/jstemmer/go-junit-report
+  version: 15422cf504f9dc030386499a5c68053a38763e58
+- name: github.com/satori/go.uuid
+  version: b061729afc07e77a8aa4fad0a2fd840958f1942a
+- name: github.com/Sirupsen/logrus
+  version: c078b1e43f58d563c74cebe63c85789e76ddb627
+- name: github.com/stretchr/testify
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
+  subpackages:
+  - assert
+- name: github.com/wadey/gocovmerge
+  version: b5bfa59ec0adc420475f97f89b58045c721d761c
+testImports: []
