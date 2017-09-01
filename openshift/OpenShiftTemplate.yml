@@ -34,7 +34,7 @@ objects:
           deploymentconfig: tenant-log-indirector
       spec:
         containers:
-          image: registry.devshift.net/openshiftio/tenant-log-indirector:${IMAGE_TAG}
+        - image: registry.devshift.net/openshiftio/tenant-log-indirector:${IMAGE_TAG}
           imagePullPolicy: Always
           name: tenant-log-indirector
           ports:
