@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -55,25 +55,31 @@ func Logger(logger *log.Logger) func(http.ResponseWriter, *http.Request) {
 			ObjectType: vars[ObjectType],
 			ObjectName: vars[ObjectName],
 		}
-		body, err := ioutil.ReadAll(request.Body)
-		if err != nil {
-			response.WriteHeader(http.StatusBadRequest)
-			response.Write([]byte(err.Error()))
-			return
-		}
-
-		if request.Header.Get("Content-Type") == "application/json" {
-			var jsonBody map[string]interface{}
-			err := json.Unmarshal(body, &jsonBody)
+		bodies := bufio.NewScanner(request.Body)
+		bodies.Split(bufio.ScanLines)
+		/*
+			body, err := ioutil.ReadAll(request.Body)
 			if err != nil {
-				LogRaw(logger, metadata, string(body))
 				response.WriteHeader(http.StatusBadRequest)
 				response.Write([]byte(err.Error()))
 				return
 			}
-			LogJSON(logger, metadata, jsonBody)
-		} else {
-			LogRaw(logger, metadata, string(body))
+		*/
+		for bodies.Scan() {
+			body := bodies.Bytes()
+			if request.Header.Get("Content-Type") == "application/json" {
+				var jsonBody map[string]interface{}
+				err := json.Unmarshal(body, &jsonBody)
+				if err != nil {
+					LogRaw(logger, metadata, string(body))
+					response.WriteHeader(http.StatusBadRequest)
+					response.Write([]byte(err.Error()))
+					return
+				}
+				LogJSON(logger, metadata, jsonBody)
+			} else {
+				LogRaw(logger, metadata, string(body))
+			}
 		}
 		response.WriteHeader(http.StatusOK)
 	}
