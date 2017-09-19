@@ -20,6 +20,14 @@ func TestRawOutput(t *testing.T) {
 	assert.Contains(t, log, "test-on")
 }
 
+func TestRawMultiLineOutput(t *testing.T) {
+	log, status := run(t, "text/plain", "a-b-c\nd-e-f")
+	assert.Equal(t, http.StatusOK, status)
+
+	assert.Contains(t, log, "\"msg\":\"a-b-c\"")
+	assert.Contains(t, log, "\"msg\":\"d-e-f\"")
+}
+
 func TestJSONOutput(t *testing.T) {
 	log, status := run(t, "application/json", "{\"a\":1}")
 	assert.Equal(t, http.StatusOK, status)
@@ -28,6 +36,14 @@ func TestJSONOutput(t *testing.T) {
 	assert.Contains(t, log, "test-ns")
 	assert.Contains(t, log, "test-ot")
 	assert.Contains(t, log, "test-on")
+}
+
+func TestJSONMultiOutput(t *testing.T) {
+	log, status := run(t, "application/json", "{\"a\":1}\n{\"b\":1}\n")
+	assert.Equal(t, http.StatusOK, status)
+
+	assert.Contains(t, log, "{\"a\":1,")
+	assert.Contains(t, log, "{\"b\":1,")
 }
 
 func TestJSONOutputMsgFromOriginal(t *testing.T) {
