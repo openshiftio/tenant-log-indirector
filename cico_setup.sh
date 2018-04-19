@@ -20,7 +20,7 @@ function load_jenkins_vars() {
 
 function install_deps() {
   # We need to disable selinux for now, XXX
-  /usr/sbin/setenforce 0
+  /usr/sbin/setenforce 0  || true
 
   # Get all the deps in
   yum -y install \
@@ -102,22 +102,29 @@ function run_tests_with_coverage() {
 }
 
 function tag_push() {
-  TARGET=$1
+  local TARGET=$1
   docker tag tenant-log-indirector-deploy $TARGET
   docker push $TARGET
 }
 
 function deploy() {
-  # Let's deploy
-  make docker-image-deploy
-
-  TAG=$(echo $GIT_COMMIT | cut -c1-${DEVSHIFT_TAG_LEN})
-  REGISTRY="push.registry.devshift.net"
+  TARGET=${TARGET:-"centos"}
 
   if [ -n "${DEVSHIFT_USERNAME}" -a -n "${DEVSHIFT_PASSWORD}" ]; then
     docker login -u ${DEVSHIFT_USERNAME} -p ${DEVSHIFT_PASSWORD} ${REGISTRY}
   else
     echo "Could not login, missing credentials for the registry"
+  fi
+
+  # Let's deploy
+  make docker-image-deploy
+
+  TAG=$(echo $GIT_COMMIT | cut -c1-${DEVSHIFT_TAG_LEN})
+
+  if [ $TARGET == "rhel" ]; then
+    REGISTRY=${DOCKER_REGISTRY:-"push.registry.devshift.net/osio-prod"}
+  else
+    REGISTRY="push.registry.devshift.net"
   fi
 
   tag_push ${REGISTRY}/openshiftio/tenant-log-indirector:$TAG
