@@ -1,3 +1,9 @@
+ifeq ($(TARGET),rhel)
+  DOCKERFILE_DEPLOY := Dockerfile.deploy.rhel
+else
+  DOCKERFILE_DEPLOY := Dockerfile.deploy
+endif
+
 DOCKER_IMAGE_CORE := $(PROJECT_NAME)
 DOCKER_IMAGE_DEPLOY := $(PROJECT_NAME)-deploy
 
@@ -30,13 +36,7 @@ docker-image-builder:
 .PHONY: docker-image-deploy
 ## Creates a runnable image using the artifacts from the bin directory.
 docker-image-deploy:
-	docker build -t $(DOCKER_IMAGE_DEPLOY) -f $(CUR_DIR)/Dockerfile.deploy $(CUR_DIR)
-
-.PHONY: docker-publish-deploy
-## Tags the runnable image and pushes it to the docker hub.
-docker-publish-deploy:
-	docker tag $(DOCKER_IMAGE_DEPLOY) openshiftio/${PROJECT_NAME}:latest
-	docker push openshiftio/${PROJECT_NAME}:latest
+	docker build -t $(DOCKER_IMAGE_DEPLOY) -f $(CUR_DIR)/$(DOCKERFILE_DEPLOY) $(CUR_DIR)
 
 .PHONY: docker-build-dir
 ## Creates the docker build directory.
