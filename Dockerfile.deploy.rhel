@@ -1,4 +1,4 @@
-FROM prod.registry.access.redhat.com/rhel7
+FROM registry.access.redhat.com/rhel7
 ENV LANG=en_US.utf8
 ENV INSTALL_PREFIX=/usr/local/f8
 
