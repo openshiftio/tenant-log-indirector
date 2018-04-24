@@ -27,7 +27,8 @@ function install_deps() {
     docker \
     make \
     git \
-    curl
+    curl \
+    golang
 
   service docker start
 
