@@ -110,6 +110,12 @@ function tag_push() {
 function deploy() {
   TARGET=${TARGET:-"centos"}
 
+  if [ $TARGET == "rhel" ]; then
+    REGISTRY=${DOCKER_REGISTRY:-"push.registry.devshift.net/osio-prod"}
+  else
+    REGISTRY="push.registry.devshift.net"
+  fi
+
   if [ -n "${DEVSHIFT_USERNAME}" -a -n "${DEVSHIFT_PASSWORD}" ]; then
     docker login -u ${DEVSHIFT_USERNAME} -p ${DEVSHIFT_PASSWORD} ${REGISTRY}
   else
@@ -120,12 +126,6 @@ function deploy() {
   make docker-image-deploy
 
   TAG=$(echo $GIT_COMMIT | cut -c1-${DEVSHIFT_TAG_LEN})
-
-  if [ $TARGET == "rhel" ]; then
-    REGISTRY=${DOCKER_REGISTRY:-"push.registry.devshift.net/osio-prod"}
-  else
-    REGISTRY="push.registry.devshift.net"
-  fi
 
   tag_push ${REGISTRY}/openshiftio/tenant-log-indirector:$TAG
   tag_push ${REGISTRY}/openshiftio/tenant-log-indirector:latest
