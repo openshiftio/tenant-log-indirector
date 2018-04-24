@@ -27,7 +27,8 @@ function install_deps() {
     docker \
     make \
     git \
-    curl
+    curl \
+    golang
 
   service docker start
 
@@ -43,6 +44,7 @@ function cleanup_env {
 
 function prepare() {
   # Let's test
+  make clean
   make docker-start
   make docker-check-go-format
   make docker-deps
