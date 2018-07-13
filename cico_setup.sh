@@ -23,7 +23,7 @@ function load_jenkins_vars() {
             BUILD_URL \
             ghprbPullId)"
   fi
-
+}
 
 function install_deps() {
   # We need to disable selinux for now, XXX
