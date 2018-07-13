@@ -34,7 +34,7 @@ objects:
           deploymentconfig: tenant-log-indirector
       spec:
         containers:
-        - image: prod.registry.devshift.net/osio-prod/openshiftio/tenant-log-indirector:${IMAGE_TAG}
+        - image: ${IMAGE}:${IMAGE_TAG}
           imagePullPolicy: Always
           name: tenant-log-indirector
           ports:
@@ -74,5 +74,7 @@ objects:
     selector:
       deploymentconfig: tenant-log-indirector
 parameters:
+- name: IMAGE
+  value: prod.registry.devshift.net/osio-prod/openshiftio/tenant-log-indirector
 - name: IMAGE_TAG
   value: latest
